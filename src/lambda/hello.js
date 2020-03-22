@@ -4,6 +4,6 @@ export function handler(event, context, callback) {
   console.log(process.env.API_TOKEN);
   callback(null, {
     statusCode: 200,
-    body: JSON.stringify({ msg: "Hello, World!" })
+    body: JSON.stringify({ msg: process.env.API_TOKEN })
   });
 }
