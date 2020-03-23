@@ -18,10 +18,25 @@ const isPriceWithinRange = (historicPrice, targetPrice, range = 100) => {
   return false
 }
 
-const getMostRecentPriceFromHistory = (symbol) => {
+const getMostRecentDate = (symbol) => Object.keys(symbol.history)[0]
+
+const getMostRecentDay = (symbol) => {
+  return symbol.history[getMostRecentDate(symbol)]
+}
+
+const getOldestDate = (symbol) => {
   const { history } = symbol
-  const firstDate = Object.keys(history)[0]
-  return getPrice(history[firstDate])
+  const dates = Object.keys(history)
+  const oldestDate = dates[dates.length - 1]
+  return oldestDate
+}
+
+const getOldestDay = (symbol) => {
+  return symbol.history[getOldestDate(symbol)]
+}
+
+const getMostRecentPriceFromHistory = (symbol) => {
+  return getPrice(getMostRecentDay(symbol))
 }
 
 const getAllDatesOfAPriceFromHistory = (symbol, price) => {
@@ -46,10 +61,13 @@ export function handler(event, context, callback) {
   callback(null, {
     statusCode: 200,
     body: JSON.stringify({
-      results: getAllDatesOfAPriceFromHistory(
+      history: DJI.history,
+      matchedDates: getAllDatesOfAPriceFromHistory(
         DJI,
         getMostRecentPriceFromHistory(DJI)
       ),
+      mostRecentDate: getMostRecentDate(DJI),
+      oldestDate: getOldestDate(DJI),
     }),
   })
 }

@@ -4,7 +4,12 @@ import './App.css'
 
 const Browse = () => {
   const [loading, setLoading] = useState(false)
-  const [results, setResults] = useState([])
+  const [results, setResults] = useState({
+    history: {},
+    matchedDates: [],
+    mostRecentDate: '',
+    oldestDate: '',
+  })
 
   const handleClick = (api) => (e) => {
     e.preventDefault()
@@ -14,7 +19,8 @@ const Browse = () => {
       .then((response) => response.json())
       .then((json) => {
         setLoading(false)
-        setResults(json.results)
+        setResults(json)
+        console.log(json)
       })
       .catch((err) => console.log(err))
   }
@@ -28,9 +34,8 @@ const Browse = () => {
       </p>
       <span>
         <ol>
-          {results.map((date) => (
-            <li>{date}</li>
-          ))}
+          {/* {results.matchedDates &&
+            results.matchedDates.map((date) => <li>{date}</li>)} */}
         </ol>
       </span>
     </React.Fragment>
