@@ -35,10 +35,10 @@ const Browse = () => {
 
       {results.matchedDates.length > 0 && (
         <>
-          <p>{`The most recent closing price of ^DJI on ${
+          <p>{`The most recent closing of ^DJI on ${
             results.mostRecentDate
-          } was $${results.history[results.mostRecentDate].close}.`}</p>
-          <p>{`The last time since ${results.oldestDate} that ^DJI closed within 100 points of this price was:`}</p>
+          } was ${results.history[results.mostRecentDate].close} points.`}</p>
+          <p>{`The last time since ${results.oldestDate} that ^DJI closed within 100 points of this was:`}</p>
         </>
       )}
       <span>
@@ -46,9 +46,7 @@ const Browse = () => {
           {results.matchedDates &&
             results.matchedDates.map((date) =>
               date !== results.mostRecentDate ? (
-                <li
-                  key={date}
-                >{`${date} @ $${results.history[date].close}`}</li>
+                <li key={date}>{`${date} @ ${results.history[date].close}`}</li>
               ) : null
             )}
         </ol>
