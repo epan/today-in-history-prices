@@ -39,7 +39,7 @@ const getMostRecentPriceFromHistory = (symbol) => {
   return getPrice(getMostRecentDay(symbol))
 }
 
-const getAllDatesOfAPriceFromHistory = (symbol, price) => {
+const getAllDatesOfAPriceFromHistory = (symbol, price, range) => {
   const matchedDays = []
   const { history } = symbol
 
@@ -47,7 +47,7 @@ const getAllDatesOfAPriceFromHistory = (symbol, price) => {
     if (history.hasOwnProperty(date)) {
       const day = history[date]
       const historicPrice = getPrice(day)
-      if (isPriceWithinRange(historicPrice, price)) {
+      if (isPriceWithinRange(historicPrice, price, range)) {
         matchedDays.push(date)
       }
     }
