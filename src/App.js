@@ -1,34 +1,56 @@
-import React, { Component } from "react"
-import logo from "./logo.svg"
-import "./App.css"
+import React, { Component, useState } from 'react'
+import logo from './logo.svg'
+import './App.css'
 
-class LambdaDemo extends Component {
-  constructor(props) {
-    super(props)
-    this.state = { loading: false, msg: null }
-  }
+const Browse = () => {
+  const [loading, setLoading] = useState(false)
+  const [results, setResults] = useState({
+    history: {},
+    matchedDates: [],
+    mostRecentDate: '',
+    oldestDate: '',
+  })
 
-  handleClick = api => e => {
+  const handleClick = (api) => (e) => {
     e.preventDefault()
 
-    this.setState({ loading: true })
-    fetch("/.netlify/functions/" + api)
-      .then(response => response.json())
-      .then(json => this.setState({ loading: false, msg: json.msg }))
+    setLoading(true)
+    fetch('/.netlify/functions/' + api)
+      .then((response) => response.json())
+      .then((json) => {
+        setLoading(false)
+        setResults(json)
+        console.log(json)
+      })
+      .catch((err) => console.log(err))
   }
-
-  render() {
-    const { loading, msg } = this.state
-
-    return (
+  return (
+    <React.Fragment>
       <p>
-        <button onClick={this.handleClick("hello")}>{loading ? "Loading..." : "Call Lambda"}</button>
-        <button onClick={this.handleClick("async-dadjoke")}>{loading ? "Loading..." : "Call Async Lambda"}</button>
+        <button onClick={handleClick('hello')}>
+          {loading ? 'Loading...' : 'Get static prices'}
+        </button>
         <br />
-        <span>{msg}</span>
       </p>
-    )
-  }
+
+      {results.matchedDates.length > 0 && (
+        <>
+          <p>{`The most recent closing price of ^DJI on ${
+            results.mostRecentDate
+          } was $${results.history[results.mostRecentDate].close}.`}</p>
+          <p>{`The last time since ${results.oldestDate} that ^DJI closed within 100 points of this price was:`}</p>
+        </>
+      )}
+      <span>
+        <ol>
+          {results.matchedDates &&
+            results.matchedDates.map((date) => (
+              <li key={date}>{`${date} @ $${results.history[date].close}`}</li>
+            ))}
+        </ol>
+      </span>
+    </React.Fragment>
+  )
 }
 
 class App extends Component {
@@ -36,11 +58,7 @@ class App extends Component {
     return (
       <div className="App">
         <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <LambdaDemo />
+          <Browse />
         </header>
       </div>
     )
