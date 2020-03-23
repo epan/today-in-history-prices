@@ -1,38 +1,40 @@
-import React, { Component } from 'react'
+import React, { Component, useState } from 'react'
 import logo from './logo.svg'
 import './App.css'
 
-class LambdaDemo extends Component {
-  constructor(props) {
-    super(props)
-    this.state = { loading: false, msg: null }
-  }
+const Browse = () => {
+  const [loading, setLoading] = useState(false)
+  const [results, setResults] = useState([])
 
-  handleClick = api => e => {
+  const handleClick = (api) => (e) => {
     e.preventDefault()
 
-    this.setState({ loading: true })
+    setLoading(true)
     fetch('/.netlify/functions/' + api)
-      .then(response => response.json())
-      .then(json => this.setState({ loading: false, msg: json.msg }))
+      .then((response) => response.json())
+      .then((json) => {
+        setLoading(false)
+        setResults(json.results)
+      })
+      .catch((err) => console.log(err))
   }
-
-  render() {
-    const { loading, msg } = this.state
-
-    return (
+  return (
+    <React.Fragment>
       <p>
-        <button onClick={this.handleClick('hello')}>
-          {loading ? 'Loading...' : 'Call Lambda'}
-        </button>
-        <button onClick={this.handleClick('async-dadjoke')}>
-          {loading ? 'Loading...' : 'Call Async Lambda'}
+        <button onClick={handleClick('hello')}>
+          {loading ? 'Loading...' : 'Get mock prices'}
         </button>
         <br />
-        <span>{msg}</span>
       </p>
-    )
-  }
+      <span>
+        <ol>
+          {results.map((date) => (
+            <li>{date}</li>
+          ))}
+        </ol>
+      </span>
+    </React.Fragment>
+  )
 }
 
 class App extends Component {
@@ -44,7 +46,7 @@ class App extends Component {
           <p>
             Edit <code>src/App.js</code> and save to reload.
           </p>
-          <LambdaDemo />
+          <Browse />
         </header>
       </div>
     )
