@@ -44,9 +44,13 @@ const Browse = () => {
       <span>
         <ol>
           {results.matchedDates &&
-            results.matchedDates.map((date) => (
-              <li key={date}>{`${date} @ $${results.history[date].close}`}</li>
-            ))}
+            results.matchedDates.map((date) =>
+              date !== results.mostRecentDate ? (
+                <li
+                  key={date}
+                >{`${date} @ $${results.history[date].close}`}</li>
+              ) : null
+            )}
         </ol>
       </span>
     </React.Fragment>
