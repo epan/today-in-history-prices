@@ -27,13 +27,17 @@ const Browse = () => {
   return (
     <React.Fragment>
       <p>
-        <button onClick={handleClick('hello')}>
+        {/* <button onClick={handleClick('hello')}>
           {loading ? 'Loading...' : 'Get static prices'}
+        </button>
+        <br /> */}
+        <button onClick={handleClick('history')}>
+          {loading ? 'Loading...' : 'Get latest ^DJI historical prices'}
         </button>
         <br />
       </p>
 
-      {results.matchedDates.length > 0 && (
+      {results.matchedDates && results.matchedDates.length > 0 && (
         <>
           <p>{`The most recent closing of ^DJI on ${
             results.mostRecentDate
